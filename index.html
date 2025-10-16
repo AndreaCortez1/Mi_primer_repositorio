@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Senderos de Luz</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    body {
+      margin: 0;
+      background: #f5f0e9;
+      color: #2d2a26;
+    }
+    header {
+      background: linear-gradient(135deg, #f2c66d, #f4a673);
+      color: #3b2416;
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+    header h1 {
+      margin: 0 0 0.4rem;
+      font-size: 2.2rem;
+      letter-spacing: 0.04em;
+    }
+    header p {
+      margin: 0;
+      font-size: 1rem;
+      opacity: 0.85;
+    }
+    main {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+    section {
+      background: #fff7ec;
+      border-radius: 14px;
+      padding: 1.4rem;
+      box-shadow: 0 4px 12px rgba(59, 36, 22, 0.12);
+    }
+    h2 {
+      margin-top: 0;
+      color: #7d4617;
+    }
+    label {
+      display: block;
+      margin: 0.8rem 0 0.4rem;
+      font-weight: 600;
+    }
+    input[type="text"], select, textarea {
+      width: 100%;
+      padding: 0.6rem 0.75rem;
+      border-radius: 8px;
+      border: 1px solid #d3b895;
+      background: #fffdf8;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+    button {
+      background: #ce7d46;
+      border: none;
+      color: #fff;
+      padding: 0.65rem 1.2rem;
+      border-radius: 999px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      margin-top: 0.6rem;
+    }
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(206, 125, 70, 0.35);
+    }
+    button.secondary {
+      background: #6a5949;
+    }
+    #status-panel {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      align-items: stretch;
+    }
+    .status-card {
+      background: #fff1db;
+      border-radius: 12px;
+      padding: 1rem;
+      border: 1px solid #f0d0aa;
+      font-size: 0.95rem;
+    }
+    .virtudes-list span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: #f9e6c9;
+      border-radius: 999px;
+      padding: 0.25rem 0.8rem;
+      margin: 0.25rem 0.3rem 0 0;
+      font-weight: 600;
+    }
+    .grid-options {
+      display: grid;
+      gap: 0.75rem;
+    }
+    .camino-card {
+      border: 1px solid #e7c8a2;
+      border-radius: 12px;
+      padding: 1rem;
+      background: #fffdfa;
+    }
+    .option-button {
+      width: 100%;
+      text-align: left;
+      display: inline-flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fffdfa;
+      border: 1px solid #d9b685;
+      color: #3b2416;
+      font-weight: 600;
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+    }
+    .option-button:hover {
+      background: #f7e0ba;
+    }
+    .badge {
+      background: #a45c1a;
+      color: #fff;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      padding: 0.2rem 0.6rem;
+    }
+    .feedback {
+      padding: 0.85rem;
+      border-radius: 10px;
+      margin-top: 0.8rem;
+      border: 1px solid #eccca5;
+      background: #fff8ed;
+    }
+    .feedback.success {
+      border-color: #80c989;
+      background: #f0fff2;
+    }
+    .feedback.error {
+      border-color: #d88875;
+      background: #fff3f0;
+    }
+    .flex-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.6rem;
+    }
+    @media (max-width: 640px) {
+      header h1 {
+        font-size: 1.8rem;
+      }
+      main {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Senderos de Luz</h1>
+    <p>Juego narrativo-cooperativo para descubrir la Biblia en familia.</p>
+  </header>
+  <main>
+    <section id="start-screen">
+      <h2>Comienza tu recorrido</h2>
+      <p>Comparte tu nombre, elige tu grupo de edad y el acompañamiento que prefieras. Después podrás explorar los caminos temáticos, responder las Puertas de Sabiduría y completar misiones.</p>
+      <form id="start-form">
+        <label for="nombre">Tu nombre</label>
+        <input type="text" id="nombre" name="nombre" placeholder="Ej. Andrea" autocomplete="name">
+
+        <label for="grupo-edad">Grupo de edad</label>
+        <select id="grupo-edad" required>
+          <option value="">Selecciona una opción…</option>
+          <option value="Niño">Niño</option>
+          <option value="Adulto">Adulto</option>
+          <option value="Anciano">Anciano</option>
+        </select>
+
+        <label for="modo">Modo de viaje</label>
+        <select id="modo" required>
+          <option value="">Selecciona una opción…</option>
+          <option value="cuento">Modo cuento ilustrado (lectura breve y lenguaje sencillo)</option>
+          <option value="estrategia">Modo estrategia ligera (más detalles y retos)</option>
+          <option value="reflexion">Modo reflexión profunda (enfoque contemplativo)</option>
+        </select>
+
+        <button type="submit">Iniciar Senderos</button>
+      </form>
+    </section>
+
+    <section id="game-screen" hidden>
+      <h2 id="saludo-jugador"></h2>
+      <div id="status-panel">
+        <div class="status-card">
+          <strong>Datos del peregrino</strong>
+          <p id="datos-jugador"></p>
+        </div>
+        <div class="status-card">
+          <strong>Gemas de Esperanza</strong>
+          <p id="contador-gemas">0</p>
+        </div>
+        <div class="status-card">
+          <strong>Virtudes</strong>
+          <div class="virtudes-list" id="lista-virtudes"></div>
+        </div>
+        <div class="status-card">
+          <strong>Árbol de Testimonios</strong>
+          <p id="contador-testimonios">Sin testimonios todavía</p>
+        </div>
+      </div>
+
+      <section>
+        <h3>Acciones</h3>
+        <div class="flex-buttons">
+          <button type="button" id="btn-menu-caminos">Recorrer un camino bíblico</button>
+          <button type="button" id="btn-menu-testimonios" class="secondary">Ver Árbol de Testimonios</button>
+          <button type="button" id="btn-menu-mision" class="secondary">Activar una Misión de Comunidad</button>
+          <button type="button" id="btn-menu-estado" class="secondary">Recordar mi estado</button>
+        </div>
+      </section>
+
+      <section id="main-view">
+        <h3>Bienvenida</h3>
+        <p>Elige una de las acciones superiores para comenzar. Tus decisiones, reflexiones y ayudas a otros peregrinos te regalarán gemas, virtudes y recuerdos que guardaremos en el Árbol de Testimonios.</p>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const VIRTUDES_BASE = {
+      Paciencia: 1,
+      Discernimiento: 1,
+      Servicio: 1,
+    };
+
+    const CAMINOS = [
+      {
+        nombre: "Patriarcas",
+        descripcion: "Inicia el recorrido con las primeras promesas y rutas de fe.",
+        capitulos: [
+          {
+            titulo: "El llamado de Abram",
+            narrativa: {
+              cuento: "Dios invitó a Abram a caminar hacia una tierra nueva. Aunque no sabía qué encontraría, confió y dio el primer paso.",
+              estrategia: "Abram respondió a la promesa de Dios dejando su tierra y familia. El viaje inició con un acto radical de confianza.",
+              reflexion: "El llamado a Abram abre la puerta a una historia de fe que se sostiene en la promesa divina. Contemplar su desapego invita a pensar en nuestros propios desarraigos.",
+            },
+            pregunta: "¿Qué representaba para Abram dejar su hogar según Génesis 12?",
+            opciones: [
+              { clave: "A", texto: "Una competencia con su familia." },
+              { clave: "B", texto: "Un sacrificio al que fue obligado." },
+              { clave: "C", texto: "Un acto de confianza en la promesa de Dios." },
+              { clave: "D", texto: "Un viaje turístico por curiosidad." },
+            ],
+            respuesta: "C",
+            pista: "Piensa en la relación entre promesa y confianza.",
+            explicacion: "Abram obedeció en confianza porque Dios le prometió bendecirlo y hacerlo una gran nación.",
+            obstaculo: "Puerta de Sabiduría: ¿Te atreves a confiar en una promesa?",
+            reflexion: "¿Qué promesa recuerdas hoy que te anima a avanzar?",
+            recompensa: { gemas: 3, virtud: "Discernimiento", recuerdo: "Ilustración del viaje de Abram" },
+          },
+          {
+            titulo: "El sueño de Jacob",
+            narrativa: {
+              cuento: "Jacob durmió con una piedra por almohada y soñó con una escalera por donde subían y bajaban ángeles.",
+              estrategia: "En Betel, Jacob percibió la presencia de Dios mediante un sueño que confirmó el pacto con sus padres.",
+              reflexion: "El encuentro de Jacob en Betel recuerda que la fidelidad divina alcanza generaciones. La escalera simboliza la unión entre lo humano y lo celestial.",
+            },
+            pregunta: "¿Qué hizo Jacob al despertar de su sueño en Betel?",
+            opciones: [
+              { clave: "A", texto: "Construyó un altar y prometió seguir a Dios." },
+              { clave: "B", texto: "Se fue sin decir nada a nadie." },
+              { clave: "C", texto: "Llamó a Esaú para pedirle ayuda." },
+              { clave: "D", texto: "Decidió abandonar su fe." },
+            ],
+            respuesta: "A",
+            pista: "Observa cómo respondió Jacob ante lo sagrado.",
+            explicacion: "Jacob reconoció a Betel como 'casa de Dios' y erigió una columna, comprometiéndose a seguir al Señor.",
+            obstaculo: "Puerta de Sabiduría: Reconocer la presencia de Dios.",
+            reflexion: "Describe un lugar que se haya vuelto significativo para tu fe.",
+            recompensa: { gemas: 4, virtud: "Paciencia", recuerdo: "Audio de Jacob bendiciendo a sus hijos" },
+          },
+        ],
+      },
+      {
+        nombre: "Profetas",
+        descripcion: "Voces que animan, corrigen y sostienen la esperanza del pueblo.",
+        capitulos: [
+          {
+            titulo: "Isaías anuncia consuelo",
+            narrativa: {
+              cuento: "El profeta Isaías habló al pueblo triste y le recordó que Dios no los había olvidado.",
+              estrategia: "Isaías 40 ofrece palabras de consuelo para un pueblo en exilio, apuntando a la fidelidad de Dios.",
+              reflexion: "El 'Consuélense, consuélense' de Isaías abre una liturgia de esperanza en medio del desarraigo.",
+            },
+            pregunta: "¿Qué imagen usa Isaías 40 para describir el cuidado de Dios?",
+            opciones: [
+              { clave: "A", texto: "Un rey distante." },
+              { clave: "B", texto: "Un pastor que carga a sus ovejas." },
+              { clave: "C", texto: "Un soldado en batalla." },
+              { clave: "D", texto: "Un comerciante justo." },
+            ],
+            respuesta: "B",
+            pista: "Busca una figura tierna y cercana.",
+            explicacion: "Isaías describe a Dios como un pastor que alimenta, reúne y lleva en brazos a los corderos.",
+            obstaculo: "Puerta de Sabiduría: Recibir consuelo y compartirlo.",
+            reflexion: "¿A quién podrías consolar hoy con palabras de esperanza?",
+            recompensa: { gemas: 3, virtud: null, recuerdo: "Mini video: Voz de esperanza en el exilio" },
+          },
+          {
+            titulo: "Miqueas y la justicia",
+            narrativa: {
+              cuento: "Miqueas le dijo al pueblo que ser amigo de Dios es hacer lo correcto, amar y vivir con humildad.",
+              estrategia: "Miqueas 6:8 resume la ética profética: justicia, amor misericordioso y humildad ante Dios.",
+              reflexion: "La síntesis de Miqueas confronta las falsas seguridades religiosas y exige una espiritualidad comprometida con la justicia.",
+            },
+            pregunta: "Según Miqueas 6:8, ¿qué pide Dios al pueblo?",
+            opciones: [
+              { clave: "A", texto: "Sacrificios costosos." },
+              { clave: "B", texto: "Conquistar nuevas tierras." },
+              { clave: "C", texto: "Practicar la justicia, amar la misericordia y ser humilde." },
+              { clave: "D", texto: "Guardar silencio absoluto." },
+            ],
+            respuesta: "C",
+            pista: "Es una tríada que equilibra acción y corazón.",
+            explicacion: "El texto invita a una vida que combine justicia, misericordia y humildad frente a Dios.",
+            obstaculo: "Puerta de Sabiduría: La justicia comienza en pequeñas acciones.",
+            reflexion: "Escribe un gesto concreto de justicia que quieras realizar.",
+            recompensa: { gemas: 4, virtud: "Servicio", recuerdo: "Ilustración colaborativa: Caminos de justicia" },
+          },
+        ],
+      },
+      {
+        nombre: "Evangelios",
+        descripcion: "Acompaña a Jesús y descubre cómo transforma cada encuentro.",
+        capitulos: [
+          {
+            titulo: "El llamado de los discípulos",
+            narrativa: {
+              cuento: "Jesús invitó a pescadores sencillos a seguirlo. Dejaron sus redes y se unieron a su misión.",
+              estrategia: "En los Evangelios, Jesús convoca a los primeros discípulos para enseñarles a pescar personas y formar comunidad.",
+              reflexion: "El seguimiento discipular requiere disponibilidad. Contemplemos qué redes necesitamos soltar hoy.",
+            },
+            pregunta: "¿Qué hicieron Simón y Andrés cuando Jesús los llamó?",
+            opciones: [
+              { clave: "A", texto: "Ignoraron a Jesús." },
+              { clave: "B", texto: "Le pidieron más tiempo." },
+              { clave: "C", texto: "Dejaron las redes y lo siguieron." },
+              { clave: "D", texto: "Vendieron sus barcas y se fueron a otra ciudad." },
+            ],
+            respuesta: "C",
+            pista: "Piensa en la inmediatez de su respuesta.",
+            explicacion: "Los discípulos respondieron con prontitud, dejando las redes para seguir a Jesús.",
+            obstaculo: "Puerta de Sabiduría: Soltar redes para abrazar una misión nueva.",
+            reflexion: "Menciona una invitación de Jesús que te desafíe hoy.",
+            recompensa: { gemas: 3, virtud: null, recuerdo: "Audio: Voces junto al mar de Galilea" },
+          },
+          {
+            titulo: "La multiplicación de los panes",
+            narrativa: {
+              cuento: "Un niño compartió sus panes y peces. Jesús los bendijo y alcanzaron para toda la multitud.",
+              estrategia: "Con cinco panes y dos peces, la multitud fue alimentada, mostrando la generosidad que brota de compartir.",
+              reflexion: "La multiplicación revela la economía del Reino: lo poco puede transformarse en abundancia cuando se comparte.",
+            },
+            pregunta: "¿Qué detalle resalta el milagro de los panes?",
+            opciones: [
+              { clave: "A", texto: "Jesús guardó los panes para otro día." },
+              { clave: "B", texto: "La abundancia vino de compartir un recurso pequeño." },
+              { clave: "C", texto: "Nadie quiso comer." },
+              { clave: "D", texto: "Los discípulos no participaron." },
+            ],
+            respuesta: "B",
+            pista: "Observa cómo participa la comunidad en el milagro.",
+            explicacion: "El gesto de compartir lo poco disponible abrió la puerta a la abundancia para todos.",
+            obstaculo: "Puerta de Sabiduría: Compartir para multiplicar.",
+            reflexion: "Anota algo concreto que podrías compartir esta semana.",
+            recompensa: { gemas: 5, virtud: "Servicio", recuerdo: "Cofre multimedia: Canción de gratitud" },
+          },
+        ],
+      },
+      {
+        nombre: "Comunidad",
+        descripcion: "Sumérgete en la vida de la iglesia naciente y su misión compartida.",
+        capitulos: [
+          {
+            titulo: "Pentecostés y nueva comunidad",
+            narrativa: {
+              cuento: "El Espíritu Santo llegó con viento y fuego. Todos se escucharon y compartieron lo que tenían.",
+              estrategia: "Pentecostés marca el nacimiento de una comunidad diversa que comparte vida, enseñanza y recursos.",
+              reflexion: "La irrupción del Espíritu abre vínculos nuevos. La comunidad cristiana nace como casa para todos.",
+            },
+            pregunta: "¿Qué práctica fue central en la primera comunidad cristiana?",
+            opciones: [
+              { clave: "A", texto: "Acumular bienes personales." },
+              { clave: "B", texto: "Compartir y poner en común lo que tenían." },
+              { clave: "C", texto: "Separarse por edades." },
+              { clave: "D", texto: "Evitar comer juntos." },
+            ],
+            respuesta: "B",
+            pista: "Piensa en una comunidad que vive como familia.",
+            explicacion: "Los discípulos perseveraban en la enseñanza, la oración y compartían los bienes para que nadie pasara necesidad.",
+            obstaculo: "Puerta de Sabiduría: Construir comunidad en la unidad.",
+            reflexion: "Escribe una acción comunitaria que quieras impulsar.",
+            recompensa: { gemas: 4, virtud: "Paciencia", recuerdo: "Postal: Icono de Pentecostés comunitario" },
+          },
+          {
+            titulo: "Cartas que animan",
+            narrativa: {
+              cuento: "Pablo y otros líderes escribían cartas para animar, corregir y recordar el amor de Dios.",
+              estrategia: "Las epístolas fortalecían iglesias diversas, abordando retos prácticos y teológicos.",
+              reflexion: "Leer las cartas apostólicas es escuchar una comunidad en diálogo. Somos invitados a continuar esa conversación.",
+            },
+            pregunta: "¿Qué propósito tenían muchas cartas del Nuevo Testamento?",
+            opciones: [
+              { clave: "A", texto: "Dar recetas de cocina." },
+              { clave: "B", texto: "Animar y orientar a las comunidades cristianas." },
+              { clave: "C", texto: "Organizar viajes turísticos." },
+              { clave: "D", texto: "Enseñar matemáticas." },
+            ],
+            respuesta: "B",
+            pista: "Escucha el tono de acompañamiento fraterno.",
+            explicacion: "Las cartas buscaban sostener a las comunidades, resolver conflictos y profundizar en la fe.",
+            obstaculo: "Puerta de Sabiduría: Escuchar y animar con la palabra escrita.",
+            reflexion: "¿A quién escribirías una carta de ánimo esta semana?",
+            recompensa: { gemas: 4, virtud: null, recuerdo: "Grabación: Lectura dramatizada de Filipenses" },
+          },
+        ],
+      },
+    ];
+
+    const MISIONES_COMUNIDAD = [
+      "Llama o envía un mensaje para animar a alguien que necesite compañía.",
+      "Busca un versículo de esperanza y compártelo con tu familia.",
+      "Prepara una nota de gratitud para alguien que sirve en tu comunidad.",
+      "Dedica 10 minutos a orar por una persona mayor o un niño de tu entorno.",
+    ];
+
+    const state = {
+      player: null,
+      currentCamino: null,
+      currentCapituloIndex: 0,
+      attempts: 0,
+      hintShown: false,
+    };
+
+    const startForm = document.getElementById("start-form");
+    const startScreen = document.getElementById("start-screen");
+    const gameScreen = document.getElementById("game-screen");
+    const saludoJugador = document.getElementById("saludo-jugador");
+    const datosJugador = document.getElementById("datos-jugador");
+    const contadorGemas = document.getElementById("contador-gemas");
+    const listaVirtudes = document.getElementById("lista-virtudes");
+    const contadorTestimonios = document.getElementById("contador-testimonios");
+    const mainView = document.getElementById("main-view");
+
+    document.getElementById("btn-menu-caminos").addEventListener("click", mostrarCaminosDisponibles);
+    document.getElementById("btn-menu-testimonios").addEventListener("click", mostrarTestimonios);
+    document.getElementById("btn-menu-mision").addEventListener("click", activarMisionComunidad);
+    document.getElementById("btn-menu-estado").addEventListener("click", mostrarResumenEstado);
+
+    startForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const nombreInput = document.getElementById("nombre");
+      const grupoEdad = document.getElementById("grupo-edad").value;
+      const modo = document.getElementById("modo").value;
+
+      if (!grupoEdad || !modo) {
+        alert("Selecciona tu grupo de edad y modo antes de continuar.");
+        return;
+      }
+
+      const nombre = nombreInput.value.trim() || "Peregrino";
+      state.player = {
+        nombre,
+        grupoEdad,
+        modo,
+        gemas: 1,
+        virtudes: { ...VIRTUDES_BASE },
+        testimonios: [],
+      };
+
+      saludoJugador.textContent = `¡Bienvenido, ${state.player.nombre}!`;
+      startScreen.hidden = true;
+      gameScreen.hidden = false;
+      actualizarEstado();
+      mostrarBienvenida();
+    });
+
+    function actualizarEstado() {
+      if (!state.player) return;
+      datosJugador.textContent = `${state.player.grupoEdad} | Modo ${formatearModo(state.player.modo)}`;
+      contadorGemas.textContent = `${state.player.gemas}`;
+      listaVirtudes.innerHTML = "";
+      Object.entries(state.player.virtudes).forEach(([virtud, cantidad]) => {
+        const badge = document.createElement("span");
+        badge.textContent = `${virtud}: ${cantidad}`;
+        listaVirtudes.appendChild(badge);
+      });
+      if (state.player.testimonios.length === 0) {
+        contadorTestimonios.textContent = "Sin testimonios todavía";
+      } else {
+        contadorTestimonios.textContent = `${state.player.testimonios.length} registrados`;
+      }
+    }
+
+    function formatearModo(modo) {
+      switch (modo) {
+        case "cuento":
+          return "cuento ilustrado";
+        case "estrategia":
+          return "estrategia ligera";
+        case "reflexion":
+          return "reflexión profunda";
+        default:
+          return modo;
+      }
+    }
+
+    function mostrarBienvenida() {
+      mainView.innerHTML = `
+        <h3>Bienvenida</h3>
+        <p>Elige una acción para comenzar. Puedes recorrer los caminos bíblicos, consultar tu Árbol de Testimonios o aceptar una Misión de Comunidad.</p>
+        <p>Recuerda que cada Puerta de Sabiduría pone a prueba tu memoria y comprensión. Si lo necesitas, tienes virtudes que pueden ayudarte.</p>
+      `;
+    }
+
+    function mostrarResumenEstado() {
+      const virtudesTexto = Object.entries(state.player.virtudes)
+        .map(([virtud, cantidad]) => `${virtud}: ${cantidad}`)
+        .join("<br>");
+      mainView.innerHTML = `
+        <h3>Tu recorrido hasta ahora</h3>
+        <p><strong>Nombre:</strong> ${state.player.nombre}</p>
+        <p><strong>Grupo:</strong> ${state.player.grupoEdad}</p>
+        <p><strong>Modo:</strong> ${formatearModo(state.player.modo)}</p>
+        <p><strong>Gemas:</strong> ${state.player.gemas}</p>
+        <p><strong>Virtudes:</strong><br>${virtudesTexto}</p>
+        <p><strong>Testimonios guardados:</strong> ${state.player.testimonios.length}</p>
+        <button type="button" class="secondary" onclick="mostrarBienvenida()">Volver</button>
+      `;
+    }
+
+    function mostrarCaminosDisponibles() {
+      const tarjetas = CAMINOS.map((camino, index) => `
+        <article class="camino-card">
+          <h4>${camino.nombre}</h4>
+          <p>${camino.descripcion}</p>
+          <button type="button" onclick="iniciarCamino(${index})">Recorrer este camino</button>
+        </article>
+      `).join("");
+
+      mainView.innerHTML = `
+        <h3>Elige un camino bíblico</h3>
+        <div class="grid-options">
+          ${tarjetas}
+        </div>
+      `;
+    }
+
+    window.iniciarCamino = function (indiceCamino) {
+      state.currentCamino = CAMINOS[indiceCamino];
+      state.currentCapituloIndex = 0;
+      state.attempts = 0;
+      presentarCapituloActual();
+    };
+
+    function presentarCapituloActual() {
+      const capitulo = state.currentCamino.capitulos[state.currentCapituloIndex];
+      state.attempts = 0;
+      state.hintShown = false;
+
+      const narrativa = capitulo.narrativa[state.player.modo] || capitulo.narrativa.cuento;
+      const opcionesHTML = capitulo.opciones.map(opcion => `
+        <button type="button" class="option-button" onclick="responderPregunta('${opcion.clave}')">
+          <span><strong>${opcion.clave})</strong> ${opcion.texto}</span>
+          <span class="badge">Responder</span>
+        </button>
+      `).join("");
+
+      mainView.innerHTML = `
+        <h3>${state.currentCamino.nombre} · ${capitulo.titulo}</h3>
+        <p><em>${capitulo.obstaculo}</em></p>
+        <p>${narrativa}</p>
+        <section class="grid-options">
+          <h4>Pregunta</h4>
+          <p>${capitulo.pregunta}</p>
+          ${opcionesHTML}
+          <div id="zona-feedback"></div>
+        </section>
+      `;
+    }
+
+    window.responderPregunta = function (claveSeleccionada) {
+      const capitulo = state.currentCamino.capitulos[state.currentCapituloIndex];
+      const zonaFeedback = document.getElementById("zona-feedback");
+      state.attempts += 1;
+
+      if (claveSeleccionada === capitulo.respuesta) {
+        zonaFeedback.innerHTML = `
+          <div class="feedback success">
+            <strong>¡Correcto!</strong> ${capitulo.explicacion}
+          </div>
+        `;
+        entregarRecompensas(capitulo);
+        registrarReflexion(capitulo);
+      } else {
+        let contenido = `
+          <div class="feedback error">
+            <strong>Respuesta incorrecta.</strong><br>
+            Intenta nuevamente, confía en lo que has aprendido.
+          </div>
+        `;
+        if (state.attempts >= 2) {
+          contenido += mostrarAyudaVirtudes(capitulo);
+        }
+        zonaFeedback.innerHTML = contenido;
+      }
+    };
+
+    function mostrarAyudaVirtudes(capitulo) {
+      const puedeDiscernimiento = (state.player.virtudes.Discernimiento || 0) > 0;
+      const puedePaciencia = (state.player.virtudes.Paciencia || 0) > 0;
+
+      let botones = "";
+      if (puedeDiscernimiento) {
+        botones += `<button type="button" onclick="usarVirtud('Discernimiento')">Usar Discernimiento</button>`;
+      }
+      if (puedePaciencia) {
+        botones += `<button type="button" onclick="usarVirtud('Paciencia')">Usar Paciencia</button>`;
+      }
+      if (!botones) {
+        botones = "<p>No tienes virtudes disponibles en este momento. ¡Anímate a seguir!</p>";
+      } else {
+        botones = `<div class="flex-buttons">${botones}</div>`;
+      }
+      return `
+        <div class="feedback">
+          <p><strong>Ayuda disponible:</strong> Puedes usar una virtud para obtener apoyo.</p>
+          ${botones}
+        </div>
+      `;
+    }
+
+    window.usarVirtud = function (virtud) {
+      if ((state.player.virtudes[virtud] || 0) <= 0) {
+        alert("No tienes esa virtud en este momento.");
+        return;
+      }
+
+      state.player.virtudes[virtud] -= 1;
+      actualizarEstado();
+
+      const capitulo = state.currentCamino.capitulos[state.currentCapituloIndex];
+      const zonaFeedback = document.getElementById("zona-feedback");
+
+      if (virtud === "Discernimiento") {
+        state.hintShown = true;
+        zonaFeedback.innerHTML += `
+          <div class="feedback">
+            <strong>Discernimiento activado:</strong> ${capitulo.pista}
+          </div>
+        `;
+      } else if (virtud === "Paciencia") {
+        state.attempts = 1;
+        zonaFeedback.innerHTML += `
+          <div class="feedback">
+            <strong>Paciencia activada:</strong> Respira hondo. El límite de intentos se ha reiniciado.
+          </div>
+        `;
+      } else if (virtud === "Servicio") {
+        zonaFeedback.innerHTML += `
+          <div class="feedback">
+            <strong>Servicio en acción:</strong> Comparte lo aprendido con alguien más y vuelve a intentarlo.
+          </div>
+        `;
+      }
+    };
+
+    function entregarRecompensas(capitulo) {
+      const zonaFeedback = document.getElementById("zona-feedback");
+      const recompensas = [];
+
+      if (capitulo.recompensa.gemas) {
+        state.player.gemas += capitulo.recompensa.gemas;
+        recompensas.push(`Has ganado ${capitulo.recompensa.gemas} Gemas de Esperanza.`);
+      }
+      if (capitulo.recompensa.virtud) {
+        const actual = state.player.virtudes[capitulo.recompensa.virtud] || 0;
+        state.player.virtudes[capitulo.recompensa.virtud] = actual + 1;
+        recompensas.push(`Recibiste la virtud "${capitulo.recompensa.virtud}".`);
+      }
+      if (capitulo.recompensa.recuerdo) {
+        recompensas.push(`Cofre de recuerdos: ${capitulo.recompensa.recuerdo}.`);
+      }
+
+      actualizarEstado();
+      zonaFeedback.innerHTML += `
+        <div class="feedback success">
+          ${recompensas.map(texto => `<p>${texto}</p>`).join("")}
+        </div>
+      `;
+    }
+
+    function registrarReflexion(capitulo) {
+      const zonaFeedback = document.getElementById("zona-feedback");
+      const reflexionHTML = `
+        <div class="feedback">
+          <p><strong>Árbol de Testimonios</strong></p>
+          <p>${capitulo.reflexion}</p>
+          <textarea id="texto-reflexion" placeholder="Escribe tu reflexión aquí (opcional)"></textarea>
+          <div class="flex-buttons">
+            <button type="button" onclick="guardarReflexion()">Guardar testimonio</button>
+            <button type="button" class="secondary" onclick="continuarCamino()">Continuar</button>
+          </div>
+        </div>
+      `;
+      zonaFeedback.innerHTML += reflexionHTML;
+    }
+
+    window.guardarReflexion = function () {
+      const textarea = document.getElementById("texto-reflexion");
+      if (!textarea) return;
+      const texto = textarea.value.trim();
+      if (!texto) {
+        alert("Escribe tu reflexión para guardarla o continúa sin guardar.");
+        return;
+      }
+      const capitulo = state.currentCamino.capitulos[state.currentCapituloIndex];
+      state.player.testimonios.push({
+        camino: state.currentCamino.nombre,
+        capitulo: capitulo.titulo,
+        texto,
+      });
+      textarea.value = "";
+      actualizarEstado();
+      alert("Tu testimonio ha sido guardado en el Árbol de Testimonios.");
+    };
+
+    window.continuarCamino = function () {
+      state.currentCapituloIndex += 1;
+      if (state.currentCapituloIndex >= state.currentCamino.capitulos.length) {
+        mainView.innerHTML = `
+          <h3>Camino completado</h3>
+          <p>Has finalizado el camino de ${state.currentCamino.nombre}. Celebra lo aprendido y comparte tus descubrimientos.</p>
+          <button type="button" onclick="mostrarCaminosDisponibles()">Elegir otro camino</button>
+          <button type="button" class="secondary" onclick="mostrarBienvenida()">Volver al menú</button>
+        `;
+        state.currentCamino = null;
+        return;
+      }
+      presentarCapituloActual();
+    };
+
+    function mostrarTestimonios() {
+      if (state.player.testimonios.length === 0) {
+        mainView.innerHTML = `
+          <h3>Árbol de Testimonios</h3>
+          <p>Todavía no hay testimonios. Cada capítulo te invita a escribir y guardar uno.</p>
+          <button type="button" class="secondary" onclick="mostrarBienvenida()">Volver</button>
+        `;
+        return;
+      }
+
+      const lista = state.player.testimonios.map((registro, index) => `
+        <article class="camino-card">
+          <strong>${index + 1}. ${registro.camino} / ${registro.capitulo}</strong>
+          <p>${registro.texto}</p>
+        </article>
+      `).join("");
+
+      mainView.innerHTML = `
+        <h3>Árbol de Testimonios</h3>
+        ${lista}
+        <button type="button" class="secondary" onclick="mostrarBienvenida()">Volver</button>
+      `;
+    }
+
+    function activarMisionComunidad() {
+      const mision = MISIONES_COMUNIDAD[Math.floor(Math.random() * MISIONES_COMUNIDAD.length)];
+      mainView.innerHTML = `
+        <h3>Misión de Comunidad</h3>
+        <p>${mision}</p>
+        <div class="flex-buttons">
+          <button type="button" onclick="aceptarMision()">Sí, me comprometo</button>
+          <button type="button" class="secondary" onclick="mostrarBienvenida()">Quizá luego</button>
+        </div>
+      `;
+      state.misionActual = mision;
+    }
+
+    window.aceptarMision = function () {
+      state.player.gemas += 2;
+      if ((state.player.virtudes.Servicio || 0) > 0) {
+        state.player.virtudes.Servicio -= 1;
+        mainView.innerHTML = `
+          <h3>Misión aceptada</h3>
+          <p>Has usado la virtud "Servicio" para animar a otros. Gracias por tu compromiso.</p>
+          <p>Recibiste 2 gemas adicionales por tu entrega.</p>
+          <button type="button" onclick="mostrarBienvenida()">Volver al menú</button>
+        `;
+      } else {
+        state.player.virtudes.Servicio = 1;
+        mainView.innerHTML = `
+          <h3>Misión aceptada</h3>
+          <p>¡Gracias por comprometerte! Como regalo recibes una nueva carta de virtud llamada "Servicio" y 2 gemas de esperanza.</p>
+          <button type="button" onclick="mostrarBienvenida()">Volver al menú</button>
+        `;
+      }
+      actualizarEstado();
+      delete state.misionActual;
+    };
+  </script>
+</body>
+</html>
