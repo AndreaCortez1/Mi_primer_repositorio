@@ -1,2 +1,2 @@
 # juegos
-Mi primer repositorio 
+Mi_primer_repositorio 
